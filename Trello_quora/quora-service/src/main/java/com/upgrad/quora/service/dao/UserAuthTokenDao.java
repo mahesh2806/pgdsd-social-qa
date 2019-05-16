@@ -1,21 +1,21 @@
 package com.upgrad.quora.service.dao;
 
 
-import com.upgrad.quora.service.entity.Question;
+import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Repository
-public class QuestionRepository {
+public class UserAuthTokenDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Question createQuestion(Question question) {
-        entityManager.persist(question);
-        return question;
+    public UserAuthTokenEntity createUserAuth(final UserAuthTokenEntity userAuthToken) {
+        entityManager.persist(userAuthToken);
+        return userAuthToken;
     }
 
 }

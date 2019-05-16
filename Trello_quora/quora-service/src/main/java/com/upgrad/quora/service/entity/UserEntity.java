@@ -1,5 +1,10 @@
 package com.upgrad.quora.service.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
@@ -10,13 +15,13 @@ import javax.validation.constraints.Size;
 @Table(name = "users")
 @NamedQueries(
         {
-                @NamedQuery(name = "userByUserName", query = "select u from User u where u.username = :username"),
-                @NamedQuery(name = "userByEmail", query = "select u from User u where u.email = :email"),
-                @NamedQuery(name = "userById", query = "select u from User u where u.id = :id")
+                @NamedQuery(name = "userByUserName", query = "select u from UserEntity u where u.username = :username"),
+                @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email = :email"),
+                @NamedQuery(name = "userById", query = "select u from UserEntity u where u.id = :id")
         }
 )
 
-public class User implements Serializable {
+public class UserEntity implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -181,5 +186,19 @@ public class User implements Serializable {
         this.contactnumber = contactnumber;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 
 }

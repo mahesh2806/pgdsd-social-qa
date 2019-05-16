@@ -1,14 +1,26 @@
 package com.upgrad.quora.service.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "user_auth")
-public class UserAuth {
+@NamedQueries({
+        @NamedQuery(name = "userAuthTokenByAccessToken", query = "select u from UserAuthTokenEntity u where u.accessToken = :accessToken ")
+})
+
+public class UserAuthTokenEntity implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -19,9 +31,14 @@ public class UserAuth {
     @Size(max = 200)
     private String uuid;
 
-    @Column(name = "user_id")
+    /*@Column(name = "user_id")
     @NotNull
-    private int userId;
+    private int userId;*/
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @Column(name = "access_token")
     @Size(max = 500)
@@ -54,12 +71,20 @@ public class UserAuth {
         this.uuid = uuid;
     }
 
-    public int getUserId() {
+    /*public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }*/
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public String getAccessToken() {
@@ -92,5 +117,20 @@ public class UserAuth {
 
     public void setLogoutAt(ZonedDateTime logoutAt) {
         this.logoutAt = logoutAt;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
