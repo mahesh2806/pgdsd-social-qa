@@ -20,7 +20,7 @@ public class AdminController {
     @Autowired
     CategoryService categoryService;
 
-    @DeleteMapping("/api/admin/user/{userId}")
+    @DeleteMapping("/admin/user/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") int userId, HttpSession httpSession) {
         if (httpSession.getAttribute("currUser") == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
