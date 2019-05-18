@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/")
 public class CommonController {
 
     @Autowired
@@ -24,8 +24,8 @@ public class CommonController {
             throws AuthorizationFailedException, UserNotFoundException {
         UserEntity userEntity = userProfileService.viewUserProfile(userUuid, authorization);
         UserDetailsResponse userDetailsResponse = new UserDetailsResponse().userName(userEntity.getUserName()).firstName(userEntity.getFirstName())
-                .lastName(userEntity.getLastName()).emailAddress(userEntity.getEmail()).dob(userEntity.getDob()).country(userEntity.getCountry()).aboutMe(userEntity.getAboutMe())
-                .contactNumber(userEntity.getContactNumber());
+                .lastName(userEntity.getLastName()).emailAddress(userEntity.getEmail()).dob(userEntity.getDob()).country(userEntity.getCountry()).aboutMe(userEntity.getAboutme())
+                .contactNumber(userEntity.getContactnumber());
         return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
     }
 }
