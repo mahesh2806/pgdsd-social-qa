@@ -46,6 +46,25 @@ public class UserDao {
             return null;
         }
     }
+	
+	 public String deleteUser(final String userUuid) throws UserNotFoundException {
+
+        UserEntity userEntity;
+        try {
+            userEntity = entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", userUuid).getSingleResult();
+        }
+        catch(NoResultException nre) {
+            userEntity = null;
+        }
+
+        if(userEntity == null) {
+            throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
+        }
+        else {
+            entityManager.remove(userEntity);
+            return userUuid;
+        }
+    }
 
     public UserAuthTokenEntity getAuthToken(final String accessToken) {
         try {

@@ -53,7 +53,6 @@ public class UserController {
         return new ResponseEntity<SignupUserResponse>(signupUserResponse, HttpStatus.CREATED);
     }
 
-
     @RequestMapping(method = RequestMethod.POST, path = "/signin", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> login(final String authorization) throws AuthenticationFailedException {
 
@@ -72,4 +71,15 @@ public class UserController {
 
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
+        UserEntity userEntity = userBusinessService.signout(authorization);
+        SignoutResponse signoutResponse = new SignoutResponse().id(userEntity.getUuid())
+                .message("SIGNED OUT SUCCESSFULLY");
+        return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
+    }
+
 }
+
+}
+
