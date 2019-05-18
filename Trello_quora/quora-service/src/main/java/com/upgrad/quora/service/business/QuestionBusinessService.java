@@ -38,4 +38,13 @@ public class QuestionBusinessService {
         return questionEntity;
     }
 
+/**
+     * This method gets the question for a question id
+     * @param questionId
+     * @return
+     */
+    public QuestionEntity getQuestionForQuestionId(String questionId) {
+        return questionDao.getQuestionForQuestionId(questionId);
+    }
+
 }
