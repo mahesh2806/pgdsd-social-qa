@@ -1,34 +1,26 @@
 package com.upgrad.quora.api.controller;
 
+import com.upgrad.quora.api.model.UserDeleteResponse;
+import com.upgrad.quora.service.business.UserAdminBusinessService;
+import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.upgrad.models.User;
-import org.upgrad.services.CategoryService;
-import org.upgrad.services.UserService;
 
-import javax.servlet.http.HttpSession;
-
-@Controller
+@RestController
+@RequestMapping
 public class AdminController {
 
     @Autowired
-    UserService userService;
+    private UserAdminBusinessService userAdminBusinessService;
 
-    @Autowired
-    CategoryService categoryService;
-
-    @DeleteMapping("/admin/user/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") int userId, HttpSession httpSession) {
-        if (httpSession.getAttribute("currUser") == null) {
-            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        } else if (((User) httpSession.getAttribute("currUser")).getRole().equalsIgnoreCase("admin")) {
-            userService.deleteUser(userId);
-            return new ResponseEntity<>("User with userId " + userId + " deleted successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("You do not have rights to delete a user!", HttpStatus.UNAUTHORIZED);
-        }
+    @RequestMapping(method = RequestMethod.DELETE, path = "/admin/user/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UserDeleteResponse> deleteUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
+        String deletedUserUuid = userAdminBusinessService.deleteUser(userUuid, authorization);
+        UserDeleteResponse userDeleteResponse = new UserDeleteResponse().id(deletedUserUuid).status("USER SUCCESSFULLY DELETED");
+        return new ResponseEntity<UserDeleteResponse>(userDeleteResponse, HttpStatus.OK);
     }
 }
