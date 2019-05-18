@@ -129,4 +129,17 @@ public class UserBusinessService {
 
 
 
+/**
+     * checks if the user is an admin
+     * @param user
+     * @return
+     */
+    public boolean isUserAdmin(UserEntity user) {
+        boolean isUserAdmin = false;
+        if (user != null && "admin".equals(user.getRole())) {
+            isUserAdmin = true;
+        }
+        return isUserAdmin;
+    }
+
 }
