@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="quora-service-1.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="main1" />
+    <orderEntry type="module" module-name="main1" />
   </component>
 </module>
