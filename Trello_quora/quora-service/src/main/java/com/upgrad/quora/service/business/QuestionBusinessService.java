@@ -1,13 +1,18 @@
 package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.QuestionDao;
+import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -19,6 +24,9 @@ public class QuestionBusinessService {
 
     @Autowired
     private UserBusinessService userBusinessService;
+
+    @Autowired
+    private UserDao userDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity createQuestion(final String authorizationToken, QuestionEntity questionEntity) throws AuthorizationFailedException {
@@ -98,6 +106,17 @@ public class QuestionBusinessService {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         }
         return questionEntity;
+    }
+
+    public boolean isUserQuestionOwner(UserEntity user, UserEntity questionOwner) {
+        boolean isUserQuestionOwner = false;
+        if (user != null && questionOwner != null && user.getUuid() != null && !user.getUuid().isEmpty()
+                && questionOwner.getUuid() != null && !questionOwner.getUuid().isEmpty()) {
+            if (user.getUuid().equals(questionOwner.getUuid())) {
+                isUserQuestionOwner = true;
+            }
+        }
+        return isUserQuestionOwner;
     }
 
     /**

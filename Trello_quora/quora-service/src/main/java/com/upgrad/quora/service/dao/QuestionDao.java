@@ -20,9 +20,9 @@ public class QuestionDao {
         return questionEntity;
     }
 
-    public QuestionEntity getQuestionForQuestionId(String questionId) {
+    public QuestionEntity getUserForQuestionId(String uuid) {
         try {
-            return entityManager.createNamedQuery("getQuestionForQuestionId", QuestionEntity.class).setParameter("uuid", questionId).getSingleResult();
+            return entityManager.createNamedQuery("getOwnerForQuestionId", QuestionEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
