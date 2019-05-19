@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class QuestionBusinessService {
@@ -45,6 +45,21 @@ public class QuestionBusinessService {
      */
     public QuestionEntity getQuestionForQuestionId(String questionId) {
         return questionDao.getQuestionForQuestionId(questionId);
+    }
+
+    public List<QuestionEntity> getAllQuestions(final String authorizationToken) throws AuthorizationFailedException {
+        UserAuthTokenEntity userAuthTokenEntity = userBusinessService.getUserAuthToken(authorizationToken);
+        List<QuestionEntity> questionEntityList = new ArrayList<QuestionEntity>();
+        if (userAuthTokenEntity != null) {
+            if (userBusinessService.isUserSignedIn(userAuthTokenEntity)) {
+                questionEntityList = questionDao.getAllQuestions();
+            } else {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions");
+            }
+        } else {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+        return questionEntityList;
     }
 
 }
