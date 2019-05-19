@@ -53,7 +53,7 @@ public class QuestionController {
         return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponseList, HttpStatus.OK);
     }
 
-@RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}",
+@RequestMapping(method = RequestMethod.PUT, path = "/edit/{questionId}",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestionContent(@RequestHeader("authorization") final String authorizationToken,
@@ -66,7 +66,7 @@ public class QuestionController {
         return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}",
+    @RequestMapping(method = RequestMethod.DELETE, path = "/delete/{questionId}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@RequestHeader("authorization") final String authorizationToken,
                                                                  @PathVariable("questionId") final String questionIdUuid)
@@ -77,7 +77,7 @@ public class QuestionController {
         return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}",
+    @RequestMapping(method = RequestMethod.GET, path = "/all/{userId}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@RequestHeader("authorization") final String authorizationToken,
                                                                                @PathVariable("userId") final String userUuId) throws AuthorizationFailedException,
