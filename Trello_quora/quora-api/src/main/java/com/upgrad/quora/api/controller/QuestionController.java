@@ -53,4 +53,45 @@ public class QuestionController {
         }
         return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponseList, HttpStatus.OK);
     }
+
+@RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionEditResponse> editQuestionContent(@RequestHeader("authorization") final String authorizationToken,
+                                                                    @PathVariable("questionId") final String questionIdUuid, QuestionEditRequest questionEditRequest)
+            throws AuthorizationFailedException, InvalidQuestionException {
+        QuestionEditResponse questionEditResponse = new QuestionEditResponse();
+        QuestionEntity questionEntity = questionBusinessService.performEditQuestionContent(authorizationToken, questionIdUuid, questionEditRequest.getContent());
+        questionEditResponse.setId(questionEntity.getUuid());
+        questionEditResponse.setStatus(QUESTION_EDITED);
+        return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@RequestHeader("authorization") final String authorizationToken,
+                                                                 @PathVariable("questionId") final String questionIdUuid)
+            throws AuthorizationFailedException, InvalidQuestionException {
+        QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse();
+        questionBusinessService.performDeleteQuestion(authorizationToken, questionIdUuid);
+        questionDeleteResponse.id(questionIdUuid).status(QUESTION_DELETED);
+        return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@RequestHeader("authorization") final String authorizationToken,
+                                                                               @PathVariable("userId") final String userUuId) throws AuthorizationFailedException,
+            UserNotFoundException {
+        List<QuestionDetailsResponse> questionDetailsResponseList = new ArrayList<QuestionDetailsResponse>();
+        List<QuestionEntity> questionEntityList = questionBusinessService.performGetAllQuestionsByUser(authorizationToken, userUuId);
+        if (questionEntityList != null && !questionEntityList.isEmpty()) {
+            for (QuestionEntity questionEntity : questionEntityList) {
+                questionDetailsResponseList.add(new QuestionDetailsResponse().id(questionEntity.getUuid())
+                        .content(questionEntity.getContent()));
+            }
+        }
+        return new ResponseEntity<List<QuestionDetailsResponse>>(questionDetailsResponseList, HttpStatus.OK);
+
+    }
 }
